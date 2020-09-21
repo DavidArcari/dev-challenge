@@ -3,7 +3,6 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Repo from './Repo';
 
-
 class App extends Component {
   constructor() {
     super();
@@ -15,7 +14,9 @@ class App extends Component {
       reposSwift: []
     };
     this.getRepo = this.getRepo.bind(this);
+    this.armazenaRepos = this.armazenaRepos.bind(this);
   }
+
   getRepo() {
     axios.get('https://api.github.com/search/repositories?q=language:dart&per_page=3')
       .then(({ data }) => this.setState({ reposDart: data }));
@@ -85,7 +86,55 @@ class App extends Component {
   }
 
   armazenaRepos() {
-    axios.post('http://localhost:3001/pesquisas')
+    const { reposDart, reposKot, reposJs, reposRuby, reposSwift } = this.state;
+    const listaDart = reposDart.items.map(repo => repo.name);
+    const listaKot = reposKot.items.map(repo => repo.name);
+    const listaJs = reposJs.items.map(repo => repo.name);
+    const listaRuby = reposRuby.items.map(repo => repo.name);
+    const listaSwift = reposSwift.items.map(repo => repo.name);
+    const resultDart = [];
+    const resultKot = [];
+    const resultJs = [];
+    const resultRuby = [];
+    const resultSwift = [];
+
+    listaDart.forEach(i => {
+      resultDart.push({ "nome_repo": i });
+    });
+    const jsonDart = JSON.stringify(resultDart);
+    console.log(jsonDart);
+
+    listaKot.forEach(i => {
+      resultKot.push({ "nome_repo": i });
+    });
+    const jsonKot = JSON.stringify(resultKot);
+    console.log(jsonKot);
+
+    listaJs.forEach(i => {
+      resultJs.push({ "nome_repo": i });
+    });
+    const jsonJs = JSON.stringify(resultJs);
+    console.log(jsonJs);
+
+    listaRuby.forEach(i => {
+      resultRuby.push({ "nome_repo": i });
+    });
+    const jsonRuby = JSON.stringify(resultRuby);
+    console.log(jsonRuby);
+
+    listaSwift.forEach(i => {
+      resultSwift.push({ "nome_repo": i });
+    });
+    const jsonSwitf = JSON.stringify(resultSwift);
+    console.log(jsonSwitf);
+
+    axios.post('http://localhost:3001/pesquisas',{
+      jsonDart,
+      jsonKot,
+      jsonJs,
+      jsonRuby,
+      jsonSwitf
+    })
     .then(() => {
       alert('Pesquisa armazenada!');
     });
